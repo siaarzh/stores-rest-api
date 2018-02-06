@@ -71,10 +71,14 @@ class Item(Resource):
 
 	@jwt_required()
 	def delete(self, name):
-		global items
-		if next(filter(lambda x: x['name'] == name, items), None) is None:
-			return {'message': "An item with the name '{}' does not exist".format(name)}, 400
-		items = list(filter(lambda x: x['name'] != name, items))
+
+		delete_query = "DELETE FROM items WHERE name=%s"
+		self.db_query(delete_query, (name,))
+
+		# global items
+		# if next(filter(lambda x: x['name'] == name, items), None) is None:
+		# 	return {'message': "An item with the name '{}' does not exist".format(name)}, 400
+		# items = list(filter(lambda x: x['name'] != name, items))
 		return {'message': "Item '{}' deleted.".format(name)}
 
 	@jwt_required()
