@@ -40,17 +40,17 @@ class User:
 				connection.close()
 				# print('Database connection closed.')
 
-	@classmethod
-	def find_by_username(cls, username):
+	@staticmethod
+	def find_by_username(username):
 
 		query = "SELECT * FROM users WHERE username=%s"
-		return cls.db_query(query, (username,))
+		return User.db_query(query, (username,))
 
-	@classmethod
-	def find_by_id(cls, _id):
+	@staticmethod
+	def find_by_id(_id):
 
 		query = "SELECT * FROM users WHERE user_id=%s"
-		return cls.db_query(query, (_id,))
+		return User.db_query(query, (_id,))
 
 
 class UserRegister(Resource):
@@ -83,17 +83,19 @@ class UserRegister(Resource):
 			cursor = connection.cursor()
 
 
-			query = "INSTERT INTO users VALUES (NULL, %s, %s)"
+			query = "INSERT INTO users VALUES (DEFAULT, %s, %s)"
 			cursor.execute(query, (data['username'], data['password']))
+
 
 			# close the communication with the PostgreSQL
 			cursor.close()
-			return {"message": "User created successfully."}, 201
+			return {"message": "User '{}' created successfully.".format(data['username'])}, 201
 
 		except (Exception, psycopg2.DatabaseError) as error:
 			print(error)
 
 		finally:
 			if connection is not None:
+				connection.commit() # always commit when using INSERT to save the data on database
 				connection.close()
 				print('Database connection closed.')

@@ -1,6 +1,10 @@
 import psycopg2
 from config import	config
 
+'''
+small comment for commit
+NOTE: Disconnect PyCharm connection before running this script
+'''
 
 params = config()
 connection = psycopg2.connect(**params)
