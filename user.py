@@ -70,10 +70,13 @@ class UserRegister(Resource):
 	)
 
 	def post(self):
+
+		data = UserRegister.parser.parse_args()
+		if User.find_by_username(data['username']):
+			return {"message": "User '{}' already exits.".format(data['username'])}, 400
+
 		connection = None
 		try:
-			data = UserRegister.parser.parse_args()
-
 			# read connection parameters
 			params = config()
 
