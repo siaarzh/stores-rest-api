@@ -25,6 +25,7 @@ class Item(Resource):
 			connection = psycopg2.connect(**params)
 			cursor = connection.cursor()
 			cursor.execute(query, query_args) # make sure query_args is a tuple, e.g.: (item,)
+			connection.commit()
 			row = cursor.fetchone()
 
 			if row:
@@ -53,14 +54,19 @@ class Item(Resource):
 	# add a dict / status code for non-existent
 	@jwt_required()
 	def post(self, name):
-		# load data only after we check for existing entry
-		if next(filter(lambda x: x['name'] == name, items), None) is not None:
+		# Check for existing item before appending
+		query = "SELECT * FROM items WHERE name=%s"
+		if self.db_query(query, (name,)):
 			return {'message': "An item with the name '{}' already exists".format(name)}, 400
 
+		# Paste item attributes
 		data = Item.parser.parse_args()
-
 		item = {'name': name, 'price': data['price']}
-		items.append(item)
+
+		# Append item to database
+		append_query = "INSERT INTO items (name, price) VALUES (%s, %s)"
+		self.db_query(append_query, (item['name'], item['price']))
+
 		return item, 201  # feedback, status code for CREATED
 
 	@jwt_required()
