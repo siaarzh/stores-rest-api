@@ -86,15 +86,33 @@ class Item(Resource):
 
 	@jwt_required()
 	def put(self, name):
+		'''
+		Updates an item or adds it, if it does not exist
+		Course section 5: video 72, 73
+
+		:param name: item dictionary
+		:return: item json
+		'''
 
 		data = Item.parser.parse_args()
+		# Check for existing item before appending
+		query = "SELECT * FROM items WHERE name=%s"
+		item = self.db_query(query, (name,))
+		updated_item = {"name": name, "price": data["price"]}
 
 		if item is None:
-			item = {'name': name, 'price': data['price']}
-			items.append(item)
+			append_query = "INSERT INTO items (name, price) VALUES (%(name)s, %(price)s)"
+			try:
+				self.db_query(append_query, updated_item)
+			except:
+				return {"message": "An error occurred inserting the item."}, 500  # internal server error
 		else:
-			item.update(data)
-		return item
+			update_query = "UPDATE items SET price=%(price)s WHERE name=%(name)s"
+			try:
+				self.db_query(update_query, updated_item)
+			except:
+				return {"message": "An error occurred updating the item."}, 500  # internal server error
+		return updated_item
 
 
 class ItemList(Resource):
