@@ -64,8 +64,11 @@ class Item(Resource):
 		item = {'name': name, 'price': data['price']}
 
 		# Append item to database
-		append_query = "INSERT INTO items (name, price) VALUES (%s, %s)"
-		self.db_query(append_query, (item['name'], item['price']))
+		append_query = "INSERT INTO items (name, price) VALUES (%(name)s, %(price)s)"
+		try:
+			self.db_query(append_query, item)
+		except:
+			return {"message": "An error occurred inserting the item."}, 500 # internal server error
 
 		return item, 201  # feedback, status code for CREATED
 
@@ -86,7 +89,6 @@ class Item(Resource):
 
 		data = Item.parser.parse_args()
 
-		item = next(filter(lambda x: x['name'] == name, items), None)
 		if item is None:
 			item = {'name': name, 'price': data['price']}
 			items.append(item)

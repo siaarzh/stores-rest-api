@@ -2,6 +2,11 @@
 This file follows the Udemy API with Flask and Python course:
 section: 5
 video: 65
+
+Instead of using SQLite, our script uses PostgreSQL, other than that the rest is either
+similar to the course content or is self explanatory.
+
+You can run this anytime you like. Nothing (should) will break.
 '''
 
 import psycopg2
