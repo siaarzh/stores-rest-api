@@ -1,2 +1,7 @@
 # IDE folders
 .idea/
+
+# Python
+__pycache__/
+resources/__pycache__/
+models/__pycache__/

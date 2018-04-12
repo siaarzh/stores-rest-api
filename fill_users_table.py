@@ -21,8 +21,8 @@ print("dropped table")
 
 # Create users
 create_table = "CREATE TABLE IF NOT EXISTS users (user_id SERIAL PRIMARY KEY, " \
-			   "username VARCHAR (50) UNIQUE," \
-			   " password VARCHAR (8) NOT NULL)"
+               "username VARCHAR (50) UNIQUE," \
+               " password VARCHAR (8) NOT NULL)"
 cursor.execute(create_table)
 print("created table users")
 
@@ -32,12 +32,12 @@ cursor.execute(insert_query, user)
 print("inserted {} into table".format(user[1]))
 
 users = [
-	('rolf', 'asdf'),
-	('john', 'zxcv')
+    ('rolf', 'asdf'),
+    ('john', 'zxcv')
 ]
 cursor.executemany(insert_query, users)
 for user in users:
-	print("inserted {} into table".format(user[1]))
+    print("inserted {} into table".format(user[1]))
 
 select_query = 'SELECT * FROM users'
 username = "serzhan"
@@ -45,12 +45,12 @@ cursor.execute(select_query)
 row = cursor.fetchone()
 
 while row is not None:
-	print("\nFetched : \n{}\n".format(row))
-	row = cursor.fetchone()
+    print("\nFetched : \n{}\n".format(row))
+    row = cursor.fetchone()
 
 # Create items
 create_table = "CREATE TABLE IF NOT EXISTS items (name VARCHAR (50) PRIMARY KEY," \
-			   " price REAL)"
+               " price REAL)"
 cursor.execute(create_table)
 print("created table items")
 
