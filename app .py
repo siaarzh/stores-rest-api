@@ -24,5 +24,5 @@ api.add_resource(Item, '/item/<string:name>')
 api.add_resource(UserRegister, '/register')
 
 if __name__ == '__main__':
-	app.run(port=5000, debug=True)  # <--- FOR RUNNING ON LOCAL MACHINE
-	# app.run(host='0.0.0.0', port=5000) # <--- FOR RUNNING ON LAN (Remember to open port)
+    app.run(port=5000, debug=True)  # <--- FOR RUNNING ON LOCAL MACHINE
+    # app.run(host='0.0.0.0', port=5000) # <--- FOR RUNNING ON LAN (Remember to open port)

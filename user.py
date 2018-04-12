@@ -6,6 +6,7 @@ from flask_restful import Resource, reqparse
 UPDATED: TO USE POSTGRESQL TO STORE USER CREDENTIALS
 '''
 
+
 class User:
 	def __init__(self, _id, username, password):
 		self.id = _id
@@ -13,7 +14,7 @@ class User:
 		self.password = password
 
 	@classmethod
-	def db_query(cls, query, query_args): # not using self in the method, but using class name
+	def db_query(cls, query, query_args):  # not using self in the method, but using class name
 
 		connection = None
 		try:
@@ -21,7 +22,7 @@ class User:
 			connection = psycopg2.connect(**params)
 			cursor = connection.cursor()
 
-			cursor.execute(query, query_args) # make sure query_args is a tuple, e.g.: (item,)
+			cursor.execute(query, query_args)  # make sure query_args is a tuple, e.g.: (item,)
 			row = cursor.fetchone()
 
 			if row:
@@ -53,8 +54,8 @@ class User:
 		return User.db_query(query, (_id,))
 
 
+# noinspection PyMethodMayBeStatic
 class UserRegister(Resource):
-
 	parser = reqparse.RequestParser()
 	parser.add_argument(
 		'username',
@@ -85,10 +86,8 @@ class UserRegister(Resource):
 			connection = psycopg2.connect(**params)
 			cursor = connection.cursor()
 
-
 			query = "INSERT INTO users VALUES (DEFAULT, %s, %s)"
 			cursor.execute(query, (data['username'], data['password']))
-
 
 			# close the communication with the PostgreSQL
 			cursor.close()
@@ -99,6 +98,6 @@ class UserRegister(Resource):
 
 		finally:
 			if connection is not None:
-				connection.commit() # always commit when using INSERT to save the data on database
+				connection.commit()  # always commit when using INSERT to save the data on database
 				connection.close()
 				print('Database connection closed.')

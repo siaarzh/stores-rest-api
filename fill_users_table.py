@@ -1,5 +1,5 @@
 import psycopg2
-from config import	config
+from config import config
 
 '''
 small comment for commit
@@ -20,8 +20,8 @@ cursor.execute(delete_table)
 print("dropped table")
 
 # Create users
-create_table = "CREATE TABLE IF NOT EXISTS users (user_id SERIAL PRIMARY KEY," \
-			   " username VARCHAR (50) UNIQUE," \
+create_table = "CREATE TABLE IF NOT EXISTS users (user_id SERIAL PRIMARY KEY, " \
+			   "username VARCHAR (50) UNIQUE," \
 			   " password VARCHAR (8) NOT NULL)"
 cursor.execute(create_table)
 print("created table users")
@@ -59,10 +59,7 @@ insert_query = "INSERT INTO items (name, price) VALUES (%s, %s)"
 cursor.execute(insert_query, item)
 print("inserted {} into table".format(item[0]))
 
-
-
-
-connection.commit() # saves data
+connection.commit()  # saves data
 print('commit achieved')
-connection.close() # closes connection resources
+connection.close()  # closes connection resources
 print("connection closed")

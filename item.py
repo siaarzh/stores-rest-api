@@ -6,8 +6,6 @@ from flask_jwt import jwt_required
 
 
 class Item(Resource):
-
-
 	parser = reqparse.RequestParser()
 	parser.add_argument(
 		'price',
@@ -17,14 +15,14 @@ class Item(Resource):
 	)
 
 	@classmethod
-	def db_query(cls, query, query_args): # not using self in the method, but using class name
+	def db_query(cls, query, query_args):  # not using self in the method, but using class name
 
 		connection = None
 		try:
 			params = config()
 			connection = psycopg2.connect(**params)
 			cursor = connection.cursor()
-			cursor.execute(query, query_args) # make sure query_args is a tuple, e.g.: (item,)
+			cursor.execute(query, query_args)  # make sure query_args is a tuple, e.g.: (item,)
 			connection.commit()
 			row = cursor.fetchone()
 
@@ -42,7 +40,7 @@ class Item(Resource):
 		finally:
 			if connection is not None:
 				connection.close()
-				# print('Database connection closed.')
+			# print('Database connection closed.')
 
 	def get(self, name):
 		query = "SELECT * FROM items WHERE name=%s"
@@ -68,7 +66,7 @@ class Item(Resource):
 		try:
 			self.db_query(append_query, item)
 		except:
-			return {"message": "An error occurred inserting the item."}, 500 # internal server error
+			return {"message": "An error occurred inserting the item."}, 500  # internal server error
 
 		return item, 201  # feedback, status code for CREATED
 
@@ -86,13 +84,13 @@ class Item(Resource):
 
 	@jwt_required()
 	def put(self, name):
-		'''
-		Updates an item or adds it, if it does not exist
-		Course section 5: video 72, 73
+		"""
+        Updates an item or adds it, if it does not exist
+        Course section 5: video 72, 73
 
-		:param name: item dictionary
-		:return: item json
-		'''
+        :param name: item dictionary
+        :return: item json
+        """
 
 		data = Item.parser.parse_args()
 		# Check for existing item before appending
@@ -115,14 +113,15 @@ class Item(Resource):
 		return updated_item
 
 
+# noinspection PyMethodMayBeStatic
 class ItemList(Resource):
 	def get(self):
-		'''
-		Returns a JSON with all items in database "items" table
-		Course section: 5, video 74
+		"""
+        Returns a JSON with all items in database "items" table
+        Course section: 5, video 74
 
-		:return: JSON of items
-		'''
+        :return: JSON of items
+        """
 		query = "SELECT * FROM items"
 		items = []
 		connection = None
@@ -133,7 +132,7 @@ class ItemList(Resource):
 			cursor.execute(query)
 			connection.commit()
 			for row in cursor:
-				items.append({"name":row[0], "price": row[1]})
+				items.append({"name": row[0], "price": row[1]})
 			cursor.close()
 
 		except (Exception, psycopg2.DatabaseError) as error:
