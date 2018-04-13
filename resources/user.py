@@ -31,28 +31,8 @@ class UserRegister(Resource):
         if UserModel.find_by_username(data['username']):
             return {"message": "User '{}' already exits.".format(data['username'])}, 400
 
-        connection = None
-        try:
-            # read connection parameters
-            params = config()
+        user = UserModel(**data)
+        user.save_to_db()
 
-            # connect to the PostgreSQL server
-            print('Connecting to the PostgreSQL database...')
-            connection = psycopg2.connect(**params)
-            cursor = connection.cursor()
+        return {"message": "User '{}' created successfully.".format(data['username'])}, 201
 
-            query = "INSERT INTO users VALUES (DEFAULT, %s, %s)"
-            cursor.execute(query, (data['username'], data['password']))
-
-            # close the communication with the PostgreSQL
-            cursor.close()
-            return {"message": "User '{}' created successfully.".format(data['username'])}, 201
-
-        except (Exception, psycopg2.DatabaseError) as error:
-            print(error)
-
-        finally:
-            if connection is not None:
-                connection.commit()  # always commit when using INSERT to save the data on database
-                connection.close()
-                print('Database connection closed.')
