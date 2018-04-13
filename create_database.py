@@ -20,9 +20,9 @@ cursor.execute(delete_table)
 print("dropped table")
 
 # Create users
-create_table = "CREATE TABLE IF NOT EXISTS users (user_id SERIAL PRIMARY KEY, " \
-               "username VARCHAR (50) UNIQUE," \
-               " password VARCHAR (8) NOT NULL)"
+create_table = "CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, " \
+               "username VARCHAR (80) UNIQUE, " \
+               "password VARCHAR (80) NOT NULL)"
 cursor.execute(create_table)
 print("created table users")
 
@@ -49,8 +49,9 @@ while row is not None:
     row = cursor.fetchone()
 
 # Create items
-create_table = "CREATE TABLE IF NOT EXISTS items (name VARCHAR (50) PRIMARY KEY," \
-               " price REAL)"
+create_table = "CREATE TABLE IF NOT EXISTS items (id SERIAL PRIMARY KEY, " \
+               "name VARCHAR (80), " \
+               "price REAL)"
 cursor.execute(create_table)
 print("created table items")
 

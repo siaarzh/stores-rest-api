@@ -6,7 +6,13 @@ from security import authenticate, identity
 from resources.user import UserRegister
 from resources.item import Item, ItemList
 
+from config import config
+
+
 app = Flask(__name__)
+params = config()
+uri = "postgres://{user}:{password}@{host}/{database}"
+app.config['SQLALCHEMY_DATABASE_URI'] = uri.format(**params)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'randomword'
 api = Api(app)

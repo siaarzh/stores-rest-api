@@ -35,7 +35,7 @@ class Item(Resource):
 
         # Append item to database
         try:
-            item.insert()
+            item.save_to_db()
         except:
             return {"message": "An error occurred inserting the item."}, 500  # internal server error
 
@@ -43,38 +43,26 @@ class Item(Resource):
 
     @jwt_required()
     def delete(self, name):
-
-        delete_query = "DELETE FROM items WHERE name=%s"
-        ItemModel.db_query(delete_query, (name,))
+        item = ItemModel.find_by_name(name)
+        if item:
+            item.delete_from_db()
 
         return {'message': "Item '{}' deleted.".format(name)}
 
     @jwt_required()
     def put(self, name):
-        """
-        Updates an item or adds it, if it does not exist
-        Course section 5: video 72, 73
-
-        :param name: item dictionary
-        :return: item json
-        """
-
         data = Item.parser.parse_args()
         # Check for existing item before appending
         item = ItemModel.find_by_name(name)
-        updated_item = ItemModel(name, data['price'])
 
         if item is None:
-            try:
-                updated_item.insert()
-            except:
-                return {"message": "An error occurred inserting the item."}, 500  # internal server error
+            item = ItemModel(name, data['price'])
         else:
-            try:
-                updated_item.update()
-            except:
-                return {"message": "An error occurred updating the item."}, 500  # internal server error
-        return updated_item.json()
+            item.price = data['price']
+
+        item.save_to_db()
+
+        return item.json()
 
 
 # noinspection PyMethodMayBeStatic
@@ -96,7 +84,7 @@ class ItemList(Resource):
             cursor.execute(query)
             connection.commit()
             for row in cursor:
-                items.append({"name": row[0], "price": row[1]})
+                items.append({"name": row[1], "price": row[2]})
             cursor.close()
 
         except (Exception, psycopg2.DatabaseError) as error:

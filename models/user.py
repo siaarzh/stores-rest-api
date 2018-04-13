@@ -7,7 +7,7 @@ from db import db
 class UserModel(db.Model):
     __tablename__ = 'users'
 
-    user_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80))
     password = db.Column(db.String(80))
 
@@ -53,5 +53,5 @@ class UserModel(db.Model):
     @staticmethod
     def find_by_id(_id):
 
-        query = "SELECT * FROM users WHERE user_id=%s"
+        query = "SELECT * FROM users WHERE id=%s"
         return UserModel.db_query(query, (_id,))
