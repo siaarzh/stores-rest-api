@@ -7,6 +7,7 @@ from resources.user import UserRegister
 from resources.item import Item, ItemList
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'randomword'
 api = Api(app)
 # app.config['JWT_AUTH_URL_RULE'] = '/login' # authentication endpoint as per lecture 75
@@ -24,5 +25,7 @@ api.add_resource(Item, '/item/<string:name>')
 api.add_resource(UserRegister, '/register')
 
 if __name__ == '__main__':
+    from db import db
+    db.init_app(app)
     app.run(port=5000, debug=True)  # <--- FOR RUNNING ON LOCAL MACHINE
     # app.run(host='0.0.0.0', port=5000) # <--- FOR RUNNING ON LAN (Remember to open port)

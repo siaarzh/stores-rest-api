@@ -1,9 +1,16 @@
 import psycopg2
 
 from config import config
+from db import db
 
 
-class ItemModel():
+class ItemModel(db.Model):
+    __tablename__ = 'items'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80))
+    price = db.Column(db.Float(precision=2))
+
     def __init__(self, name, price):
         self.name = name
         self.price = price
@@ -31,13 +38,16 @@ class ItemModel():
             cursor.close()
             return result
 
-        except (Exception, psycopg2.DatabaseError) as error:
-            print(error)
+        except psycopg2.ProgrammingError as error:
+            print('PostgreSQL WARN ', error)
+
+        except Exception as e:
+            print(e, type(e))
+            raise e
 
         finally:
             if connection is not None:
                 connection.close()
-            # print('Database connection closed.')
 
     @classmethod
     def find_by_name(cls, name):
@@ -48,9 +58,8 @@ class ItemModel():
 
     def update(self):
         update_query = "UPDATE items SET price=%(price)s WHERE name=%(name)s"
-        self.db_query(update_query, (self.name, self.price))
+        self.db_query(update_query, {'name':self.name, 'price':self.price})
 
     def insert(self):
         insert_query = "INSERT INTO items (name, price) VALUES (%(name)s, %(price)s)"
-        self.db_query(insert_query, (self.name, self.price))
-
+        self.db_query(insert_query, {'name':self.name, 'price':self.price})
