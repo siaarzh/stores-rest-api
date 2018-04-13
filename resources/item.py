@@ -1,6 +1,3 @@
-import psycopg2
-from config import config
-
 from flask_restful import Resource, reqparse
 from flask_jwt import jwt_required
 
@@ -65,34 +62,7 @@ class Item(Resource):
         return item.json()
 
 
-# noinspection PyMethodMayBeStatic
 class ItemList(Resource):
     def get(self):
-        """
-        Returns a JSON with all items in database "items" table
-        Course section: 5, video 74
+        return {'items': [item.json() for item in ItemModel.query.all()]}
 
-        :return: JSON of items
-        """
-        query = "SELECT * FROM items"
-        items = []
-        connection = None
-        try:
-            params = config()
-            connection = psycopg2.connect(**params)
-            cursor = connection.cursor()
-            cursor.execute(query)
-            connection.commit()
-            for row in cursor:
-                items.append({"name": row[1], "price": row[2]})
-            cursor.close()
-
-        except (Exception, psycopg2.DatabaseError) as error:
-            print(error)
-            return {"An error occurred"}, 500
-
-        finally:
-            if connection is not None:
-                connection.close()
-
-        return {'items': items}
