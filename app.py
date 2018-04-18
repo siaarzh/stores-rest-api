@@ -27,7 +27,7 @@ jwt = JWT(app, authenticate, identity)  # /auth
 
 # # config JWT to expire within half an hour (lec 75)
 # app.config['JWT_EXPIRATION_DELTA'] = timedelta(seconds=1800)
-#
+# #
 # # config JWT auth key name to be 'email' instead of default 'username' (lec 75)
 # app.config['JWT_AUTH_USERNAME_KEY'] = 'email'
 
