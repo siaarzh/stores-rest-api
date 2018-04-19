@@ -19,10 +19,6 @@ app.secret_key = 'randomword'
 api = Api(app)
 # app.config['JWT_AUTH_URL_RULE'] = '/login' # authentication endpoint as per lecture 75
 
-@app.before_first_request
-def create_tables():
-    db.create_all()
-
 jwt = JWT(app, authenticate, identity)  # /auth
 
 # # config JWT to expire within half an hour (lec 75)
