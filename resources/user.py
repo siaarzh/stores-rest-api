@@ -1,15 +1,7 @@
-import psycopg2
-from config import config
 from flask_restful import Resource, reqparse
-
 from models.user import UserModel
 
-'''
-UPDATED: TO USE POSTGRESQL TO STORE USER CREDENTIALS
-'''
 
-
-# noinspection PyMethodMayBeStatic
 class UserRegister(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument(
