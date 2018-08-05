@@ -35,5 +35,5 @@ api.add_resource(Store, '/store/<string:name>')
 if __name__ == '__main__':
     from db import db
     db.init_app(app)
-    app.run(port=5000, debug=True)  # <--- FOR RUNNING ON LOCAL MACHINE
+    app.run(port=3031, debug=True)  # <--- FOR RUNNING ON LOCAL MACHINE
     # app.run(host='0.0.0.0', port=5000) # <--- FOR RUNNING ON LAN (Remember to open port)
